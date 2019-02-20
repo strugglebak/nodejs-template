@@ -9,20 +9,22 @@
       <h1 id="amount">{{amount}}</h1>
       <button id="button">发送请求</button>
       <script charset="utf-8">
-          function showAmount(data) {
-            amount.innerText = data.amount
-          }
           button.addEventListener('click', (e) => {
             let dom = document.createElement('script')
-            dom.src = '/pay?callback=showAmount'
+            // 随机取名
+            let functionName = 'showAmount'+ parseInt(Math.random()*10000000 ,10)
+            window[functionName] = function(data) {
+              amount.innerText = data.amount
+            }
+            dom.src = '/pay?callback=' + functionName
             document.body.appendChild(dom)
             dom.onload = function () {
-              alert('成功')
               e.currentTarget.remove()
+              delete window[functionName]
             }
             dom.onerror = function () {
-              alert('失败')
               e.currentTarget.remove()
+              delete window[functionName]
             }
           })
       </script>

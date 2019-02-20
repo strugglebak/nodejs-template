@@ -31,11 +31,17 @@ var server = http.createServer(function(request, response){
     let amount = fs.readFileSync('./db', 'utf8')
     amount -= 1
     fs.writeFileSync('./db', amount)
+
+    let callbackName = query.callback
+
     response.setHeader('Content-Type', 'application/javascript')
     response.write(`
-      showAmount({
-        amount: ${amount}
-      })
+      ${callbackName}.call(
+        undefined,
+        {
+          amount: ${amount}
+        }
+      )
     `)
     response.end()
   }else{
