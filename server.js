@@ -10,7 +10,7 @@ if(!port){
 
 var server = http.createServer(function(request, response){
   var parsedUrl = url.parse(request.url, true)
-  var pathWithQuery = request.url 
+  var pathWithQuery = request.url
   var queryString = ''
   if(pathWithQuery.indexOf('?') >= 0){ queryString = pathWithQuery.substring(pathWithQuery.indexOf('?')) }
   var path = parsedUrl.pathname
@@ -22,14 +22,27 @@ var server = http.createServer(function(request, response){
   console.log('方方说：含查询字符串的路径\n' + pathWithQuery)
 
   if(path === '/'){
+    let index = fs.readFileSync('./index.html', 'utf8')
     response.statusCode = 200
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
-    response.write('哈哈哈')
+    response.write(index)
+    response.end()
+  }else if(path === '/pay') {
+    let amount = fs.readFileSync('./db', 'utf8')
+    amount -= 1
+    fs.writeFileSync('./db', amount)
+    response.setHeader('Content-Type', 'application/javascript')
+    response.write(`
+      showAmount({
+        amount: ${amount}
+      })
+    `)
     response.end()
   }else{
+    let html = fs.readFileSync('./404.html', 'utf8')
     response.statusCode = 404
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
-    response.write('呜呜呜')
+    response.write(html)
     response.end()
   }
 

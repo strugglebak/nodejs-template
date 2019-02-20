@@ -1,0 +1,30 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width" />
+      <title>跨域 demo</title>
+    </head>
+    <body>
+      <h1 id="amount">{{amount}}</h1>
+      <button id="button">发送请求</button>
+      <script charset="utf-8">
+          function showAmount(data) {
+            amount.innerText = data.amount
+          }
+          button.addEventListener('click', (e) => {
+            let dom = document.createElement('script')
+            dom.src = '/pay?callback=showAmount'
+            document.body.appendChild(dom)
+            dom.onload = function () {
+              alert('成功')
+              e.currentTarget.remove()
+            }
+            dom.onerror = function () {
+              alert('失败')
+              e.currentTarget.remove()
+            }
+          })
+      </script>
+    </body>
+  </html>
